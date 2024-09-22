@@ -5,6 +5,14 @@
 //   year: number,
 //   isComplete: boolean,
 // }
+
+// HELPER FUNCTION
+const indexFind = (arr, id) => {
+  return arr.findIndex((item) => item.id == id);
+}
+
+// MAIN
+
 const RENDER_EVENT = new Event('RENDER_BOOK');
 
 const submitBookForm = document.getElementById('bookForm');
@@ -25,7 +33,7 @@ const generateElement = (bookObj) => {
             <div>
               <button data-testid="bookItemIsCompleteButton" class="done-read-btn"> Belum Selesai dibaca</button>
               <button data-testid="bookItemDeleteButton" class="remove-btn" onclick="removeBook(${bookObj.id})">Hapus Buku</button>
-              <button data-testid="bookItemEditButton" class="edit-btn">Edit Buku</button>
+              <button data-testid="bookItemEditButton" class="edit-btn" onclick="editBook(${bookObj.id})">Edit Buku</button>
             </div>`;
   }
   else {
@@ -35,7 +43,7 @@ const generateElement = (bookObj) => {
             <div>
               <button data-testid="bookItemIsCompleteButton" class="done-read-btn">Selesai dibaca</button>
               <button data-testid="bookItemDeleteButton" class="remove-btn" onclick="removeBook(${bookObj.id})">Hapus Buku</button>
-              <button data-testid="bookItemEditButton" class="edit-btn">Edit Buku</button>
+              <button data-testid="bookItemEditButton" class="edit-btn" onclick="editBook(${bookObj.id})">Edit Buku</button>
             </div>`;
   }
 
@@ -62,12 +70,27 @@ const addBook = () => {
 };
 
 const removeBook = (bookID) => {
-  const indexToRemove = booksList.findIndex((book) => book.id == bookID);
+  const indexToRemove = indexFind(booksList, bookID);
   booksList.splice(indexToRemove, 1);
 
   document.dispatchEvent(RENDER_EVENT);
 };
 
+const editBook = (bookID) => {
+  const indexToEdit = indexFind(booksList, bookID);
+  const newTitle = prompt('Ubah judul buku :', booksList[indexToEdit].title);
+  const newAuthor = prompt('Ubah penulis buku :', booksList[indexToEdit].author);
+  const newYear = prompt('Ubah tahun rilis :', booksList[indexToEdit].year);
+
+  booksList[indexToEdit].title = newTitle
+  booksList[indexToEdit].author = newAuthor;
+  booksList[indexToEdit].year = newYear;
+
+
+  document.dispatchEvent(RENDER_EVENT);
+};
+
+// HANDLE UPDATE UI AFTER AN EVENT OCCUR
 document.addEventListener('RENDER_BOOK', () => {
   completedList.innerHTML = '';
   incompleteList.innerHTML = '';
@@ -84,10 +107,11 @@ document.addEventListener('RENDER_BOOK', () => {
   };
 });
 
+// HANDLE FORM
 submitBookForm.addEventListener('submit', (e) => {
   addBook();
   console.log(booksList);
-  submitBookForm.value = '';
+  submitBookForm.reset();
   e.preventDefault();
 });
 // Do your work here...
