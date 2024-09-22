@@ -30,7 +30,7 @@ const generateElement = (bookObj) => {
           <p data-testid="bookItemAuthor">Penulis: ${bookObj.author}</p>
           <p data-testid="bookItemYear">Tahun: ${bookObj.year}</p>
           <div>
-            <button data-testid="bookItemIsCompleteButton" class="done-read-btn">${bookObj.isComplete ? 'Belum selesai dibaca' : 'Selesai dibaca'}</button>
+            <button data-testid="bookItemIsCompleteButton" class="done-read-btn" onclick="isDoneRead(${bookObj.id})">${bookObj.isComplete ? 'Belum selesai dibaca' : 'Selesai dibaca'}</button>
             <button data-testid="bookItemDeleteButton" class="remove-btn" onclick="removeBook(${bookObj.id})">Hapus Buku</button>
             <button data-testid="bookItemEditButton" class="edit-btn" onclick="editBook(${bookObj.id})">Edit Buku</button>
           </div>`;
@@ -55,6 +55,13 @@ const addBook = () => {
   booksList.push(bookObj)
 
   document.dispatchEvent(RENDER_EVENT)
+};
+
+const isDoneRead = (bookID) => {
+  const indexToEdit = indexFind(booksList, bookID);
+  booksList[indexToEdit].isComplete = !booksList[indexToEdit].isComplete;
+
+  document.dispatchEvent(RENDER_EVENT);
 };
 
 const removeBook = (bookID) => {
