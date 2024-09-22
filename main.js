@@ -26,26 +26,14 @@ const generateElement = (bookObj) => {
   container.setAttribute('data-bookid', `${bookObj.id}`);
   container.setAttribute('data-testid', 'bookItem');
 
-  if (bookObj.isComplete) {
-    container.innerHTML = `<h3 data-testid="bookItemTitle">${bookObj.title}</h3>
-            <p data-testid="bookItemAuthor">Penulis: ${bookObj.author}</p>
-            <p data-testid="bookItemYear">Tahun: ${bookObj.year}</p>
-            <div>
-              <button data-testid="bookItemIsCompleteButton" class="done-read-btn"> Belum Selesai dibaca</button>
-              <button data-testid="bookItemDeleteButton" class="remove-btn" onclick="removeBook(${bookObj.id})">Hapus Buku</button>
-              <button data-testid="bookItemEditButton" class="edit-btn" onclick="editBook(${bookObj.id})">Edit Buku</button>
-            </div>`;
-  }
-  else {
-    container.innerHTML = `<h3 data-testid="bookItemTitle">${bookObj.title}</h3>
-            <p data-testid="bookItemAuthor">Penulis: ${bookObj.author}</p>
-            <p data-testid="bookItemYear">Tahun: ${bookObj.year}</p>
-            <div>
-              <button data-testid="bookItemIsCompleteButton" class="done-read-btn">Selesai dibaca</button>
-              <button data-testid="bookItemDeleteButton" class="remove-btn" onclick="removeBook(${bookObj.id})">Hapus Buku</button>
-              <button data-testid="bookItemEditButton" class="edit-btn" onclick="editBook(${bookObj.id})">Edit Buku</button>
-            </div>`;
-  }
+  container.innerHTML = `<h3 data-testid="bookItemTitle">${bookObj.title}</h3>
+          <p data-testid="bookItemAuthor">Penulis: ${bookObj.author}</p>
+          <p data-testid="bookItemYear">Tahun: ${bookObj.year}</p>
+          <div>
+            <button data-testid="bookItemIsCompleteButton" class="done-read-btn">${bookObj.isComplete ? 'Belum selesai dibaca' : 'Selesai dibaca'}</button>
+            <button data-testid="bookItemDeleteButton" class="remove-btn" onclick="removeBook(${bookObj.id})">Hapus Buku</button>
+            <button data-testid="bookItemEditButton" class="edit-btn" onclick="editBook(${bookObj.id})">Edit Buku</button>
+          </div>`;
 
   return container;
 };
