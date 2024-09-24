@@ -9,17 +9,35 @@
 // HELPER FUNCTION
 const indexFind = (arr, id) => {
   return arr.findIndex((item) => item.id == id);
-}
+};
+
+const checkForStorage = () => {
+    return typeof (Storage) !== 'undefined';
+};
+
+const getBooksData = () => {
+  if (checkForStorage) {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  };
+
+  return [];
+};
+
+const saveData = () => {
+  if (checkForStorage) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(booksList));
+  };
+};
 
 // MAIN
-
+const STORAGE_KEY = 'STORAGE_KEY';
 const RENDER_EVENT = new Event('RENDER_BOOK');
 
 const submitBookForm = document.getElementById('bookForm');
 const incompleteList = document.getElementById('incompleteBookList');
 const completedList = document.getElementById('completeBookList');
 
-const booksList = [];
+let booksList = [];
 
 const generateElement = (bookObj) => {
   const container = document.createElement('div');
@@ -55,6 +73,7 @@ const addBook = () => {
   booksList.push(bookObj)
 
   document.dispatchEvent(RENDER_EVENT)
+  saveData();
 };
 
 const isDoneRead = (bookID) => {
@@ -62,6 +81,7 @@ const isDoneRead = (bookID) => {
   booksList[indexToEdit].isComplete = !booksList[indexToEdit].isComplete;
 
   document.dispatchEvent(RENDER_EVENT);
+  saveData();
 };
 
 const removeBook = (bookID) => {
@@ -69,6 +89,7 @@ const removeBook = (bookID) => {
   booksList.splice(indexToRemove, 1);
 
   document.dispatchEvent(RENDER_EVENT);
+  saveData();
 };
 
 const editBook = (bookID) => {
@@ -79,13 +100,25 @@ const editBook = (bookID) => {
 
   booksList[indexToEdit].title = newTitle
   booksList[indexToEdit].author = newAuthor;
-  booksList[indexToEdit].year = newYear;
+  booksList[indexToEdit].year = Number(newYear);
 
 
   document.dispatchEvent(RENDER_EVENT);
+  saveData();
 };
 
 // HANDLE UPDATE UI AFTER AN EVENT OCCUR
+window.addEventListener('load', () => {
+  if (checkForStorage) {
+
+    if (localStorage.getItem(STORAGE_KEY) !== null) {
+      booksList = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      document.dispatchEvent(RENDER_EVENT);
+    };
+
+  };
+});
+
 document.addEventListener('RENDER_BOOK', () => {
   completedList.innerHTML = '';
   incompleteList.innerHTML = '';
@@ -100,6 +133,8 @@ document.addEventListener('RENDER_BOOK', () => {
       incompleteList.appendChild(bookElement);
     }
   };
+
+  console.log(booksList)
 });
 
 // HANDLE FORM
