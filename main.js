@@ -34,6 +34,7 @@ const STORAGE_KEY = 'STORAGE_KEY';
 const RENDER_EVENT = new Event('RENDER_BOOK');
 
 const submitBookForm = document.getElementById('bookForm');
+const searchBookForm = document.getElementById('searchBook');
 const incompleteList = document.getElementById('incompleteBookList');
 const completedList = document.getElementById('completeBookList');
 
@@ -107,6 +108,14 @@ const editBook = (bookID) => {
   saveData();
 };
 
+const searchBook = () => {
+  const bookTitle = document.getElementById('searchBookTitle').value;
+  bookTitle ? booksList = getBooksData().filter(book => book.title.toLowerCase().includes(bookTitle.toLowerCase()))
+            : booksList = getBooksData();
+
+  document.dispatchEvent(RENDER_EVENT);
+};
+
 // HANDLE UPDATE UI AFTER AN EVENT OCCUR
 window.addEventListener('load', () => {
   if (checkForStorage) {
@@ -124,7 +133,7 @@ document.addEventListener('RENDER_BOOK', () => {
   incompleteList.innerHTML = '';
 
   for (const book of booksList) {
-    const bookElement = generateElement(book); // Harus berbentuk Node
+    const bookElement = generateElement(book); 
 
     if (book.isComplete) {
       completedList.appendChild(bookElement);
@@ -140,9 +149,12 @@ document.addEventListener('RENDER_BOOK', () => {
 // HANDLE FORM
 submitBookForm.addEventListener('submit', (e) => {
   addBook();
-  console.log(booksList);
   submitBookForm.reset();
   e.preventDefault();
 });
-// Do your work here...
-console.log('Hello, world!');
+
+searchBookForm.addEventListener('submit', (e) => {
+  searchBook();
+  searchBookForm.reset();
+  e.preventDefault();
+});
