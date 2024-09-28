@@ -44,6 +44,7 @@ const generateElement = (bookObj) => {
   const container = document.createElement('div');
   container.setAttribute('data-bookid', `${bookObj.id}`);
   container.setAttribute('data-testid', 'bookItem');
+  container.setAttribute('class', 'book-element')
 
   container.innerHTML = `<h3 data-testid="bookItemTitle">${bookObj.title}</h3>
           <p data-testid="bookItemAuthor">Penulis: ${bookObj.author}</p>
@@ -93,6 +94,7 @@ const removeBook = (bookID) => {
   saveData();
 };
 
+// TO-DO : bug when canceling data change
 const editBook = (bookID) => {
   const indexToEdit = indexFind(booksList, bookID);
   const newTitle = prompt('Ubah judul buku :', booksList[indexToEdit].title);
@@ -106,7 +108,7 @@ const editBook = (bookID) => {
 
   document.dispatchEvent(RENDER_EVENT);
   saveData();
-};
+}; 
 
 const searchBook = () => {
   const bookTitle = document.getElementById('searchBookTitle').value;
